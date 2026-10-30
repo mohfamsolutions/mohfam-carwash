@@ -25,6 +25,20 @@ Download the encrypted Actions backup and use node scripts/decrypt-backup.mjs pa
 
 Initial deployment runs caught preview wording before uploads and unbranded missing-page responses during live verification. Production-copy validation and explicit local missing-path routing were added. Final verification evidence is stored in artifacts/hosting/ and artifacts/qa-live/; the successful workflow run is recorded in the final delivery.
 
+## Publication verification completed
+
+Published October 30, 2026: https://mohfamcarwash.com/.
+
+- Successful deployment workflow: https://github.com/mohfamsolutions/mohfam-carwash/actions/runs/40990714623 (release commit 358b202).
+- Matching CI run passed: https://github.com/mohfamsolutions/mohfam-carwash/actions/runs/40990713433.
+- All six public content routes return HTTP 200 with verified canonicals, indexable metadata, structured data and security headers. Missing routes and both branded 404 entry points return actual HTTP 404 with the branded document.
+- HTTP, www, explicit index URLs and the confirmed Security-domain subfolder alias redirect to the canonical Car Wash origin. All seven live social images are valid 1200x630 JPEGs below 300 KB.
+- Actual live Chromium QA passed all 38 checks: all seven pages at 1440, 1024, 768, 390 and 320px; no overflow, missing images or page script errors; zero automated WCAG A/AA violations at 1440/320px; navigation/header/FAQ/reduced-motion interactions; field preservation after actual PHP validation, disabled-delivery and connection errors. Representative live desktop Home and mobile Contact screenshots were visually reviewed.
+- Actual PHP lint and endpoint security tests passed in CI. Live API origin/CSRF checks passed. No email was sent, and disabled-delivery feedback accurately states NOT SENT.
+- The encrypted backup artifact was downloaded and successfully authenticated/decrypted locally to artifacts/restored/backup.tar.gz. Its archive inventory includes the prior site and account configuration. No remote restore or deletion was performed.
+
+Remaining: confirm actual business offerings/details, verify a sender domain and real recipient inbox delivery before enabling form mail, and complete Search Console ownership/sitemap submission. Manual assistive-technology and real-device testing remain separate from the completed browser and automated accessibility checks.
+
 ## Production behavior
 
 The public build has indexable metadata, verified HTTPS canonicals and a crawlable robots/sitemap; 404s and API responses remain noindex. Local builds retain noindex. Dedicated-directory Apache rules handle HTTPS, www, explicit index files, the confirmed subfolder alias, security headers and branded HTTP 404s. No HSTS preload or parent-domain policy was introduced.
