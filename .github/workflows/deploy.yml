@@ -23,6 +23,7 @@ jobs:
       - run: php -l hosting/api/index.php && php -l hosting/404.php
       - run: node scripts/test-php.mjs
       - run: npm run build:production
+      - run: node scripts/verify-production.mjs
       - run: node scripts/deployment-guard.mjs
       - name: Verify destination, back up and upload without deletion
         env:

@@ -33,13 +33,13 @@ function document(p){const url=site.origin+p.path, image=site.origin+`/assets/so
 function productionHtml(html,p){
  const replacements=[
   ['<meta name="robots" content="noindex,nofollow">',p.key==='404'?'<meta name="robots" content="noindex,follow">':'<meta name="robots" content="index,follow">'],
-  ['LOCAL PREVIEW <span>?</span> Services & availability awaiting confirmation','A NEW MOHFAM DIVISION <span>?</span> Contact us to confirm services & availability'],
-  ['Local preview ? Not yet open for online booking','Contact us directly ? Online booking is not available'],
+  ['LOCAL PREVIEW <span>·</span> Services & availability awaiting confirmation','A NEW MOHFAM DIVISION <span>·</span> Contact us to confirm services & availability'],
+  ['Local preview · Not yet open for online booking','Contact us directly · Online booking is not available'],
   ['This local preview introduces the identity and proposed service structure.','This website introduces the division and proposed service structure.'],
   ['The service concepts shown in this preview','The service concepts shown on this website'],
   ['The following are proposals, not confirmed offerings.','These scopes are being developed and are not yet confirmed offerings.'],
   ['Local preview: email delivery is disabled. Use the phone or email above to contact MohFam.','Online inquiries are not yet available. Please use the phone or email above to contact MohFam.'],
-  ['Privacy notice ? Local preview','Privacy notice'],
+  ['Privacy notice · Local preview','Privacy notice'],
   ['This notice describes the local preview as of October 30, 2026. It must be reviewed against the final hosting and mail setup before publication.','This notice describes this website as of October 30, 2026. Online inquiry delivery is not enabled.'],
   ['Local preview behavior','Inquiry handling'],
   ['Email delivery is disabled.','Online inquiry delivery is not enabled.'],

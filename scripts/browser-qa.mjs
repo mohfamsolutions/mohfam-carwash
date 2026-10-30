@@ -3,10 +3,12 @@ import AxeBuilder from '@axe-core/playwright';
 import fs from 'node:fs/promises';
 import assert from 'node:assert/strict';
 import {createServer} from './server.mjs';
-import {pages} from '../data/site.mjs';
-const port=4180,origin=`http://127.0.0.1:${port}`;
-await fs.mkdir('artifacts/qa',{recursive:true});
-const server=createServer({port});await new Promise(r=>server.listen(port,'127.0.0.1',r));
+import {pages,site} from '../data/site.mjs';
+const isLive=process.argv.includes('--live');
+const port=4180,origin=isLive?site.origin:`http://127.0.0.1:${port}`;
+const artifactDir=isLive?'artifacts/qa-live':'artifacts/qa';
+await fs.mkdir(artifactDir,{recursive:true});
+const server=isLive?null:createServer({port});if(server)await new Promise(r=>server.listen(port,'127.0.0.1',r));
 const browser=await chromium.launch({headless:true});
 const results=[],issues=[];
 try{
@@ -17,8 +19,8 @@ try{
   for(const p of pages){await page.goto(origin+p.path);await page.evaluate(()=>document.fonts.ready);await page.locator('footer').scrollIntoViewIfNeeded();await page.waitForTimeout(80);await page.evaluate(()=>window.scrollTo({top:0,behavior:'instant'}));await page.waitForTimeout(350);
    assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false,`Overflow ${p.key} ${width}`);
    assert.equal(await page.locator('img').evaluateAll(imgs=>imgs.filter(i=>!i.complete||i.naturalWidth===0).length),0,`Images ${p.key} ${width}`);
-   if([1440,390].includes(width)||(width===320&&p.key==='home'))await page.screenshot({path:`artifacts/qa/${p.key}-${width}.png`,fullPage:true});
-   if([1440,320].includes(width)){const a11y=await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa','wcag21aa']).analyze();await fs.writeFile(`artifacts/qa/axe-${p.key}-${width}.json`,JSON.stringify(a11y.violations,null,2));assert.equal(a11y.violations.length,0,`Accessibility ${p.key} ${width}: ${a11y.violations.map(v=>v.id+': '+v.nodes.map(n=>n.target).join(', ')).join('; ')}`);}
+   if([1440,390].includes(width)||(width===320&&p.key==='home'))await page.screenshot({path:`${artifactDir}/${p.key}-${width}.png`,fullPage:true});
+   if([1440,320].includes(width)){const a11y=await new AxeBuilder({page}).withTags(['wcag2a','wcag2aa','wcag21aa']).analyze();await fs.writeFile(`${artifactDir}/axe-${p.key}-${width}.json`,JSON.stringify(a11y.violations,null,2));assert.equal(a11y.violations.length,0,`Accessibility ${p.key} ${width}: ${a11y.violations.map(v=>v.id+': '+v.nodes.map(n=>n.target).join(', ')).join('; ')}`);}
    results.push(`${p.key} ${width}px: rendered, no overflow or missing images`);
   }
  }
@@ -39,6 +41,6 @@ try{
  await page.route('**/api/inquiry',route=>route.abort());await page.locator('button[type=submit]').click();await page.waitForFunction(()=>document.querySelector('#form-feedback').textContent.includes('Connection problem'));assert.equal(await page.locator('input[name=email]').inputValue(),'visitor@example.org');await page.unroute('**/api/inquiry');
  results.push('Actual server validation, disabled-delivery and interrupted-connection errors preserve fields');
  assert.equal(issues.length,0,issues.join('\n'));
- await fs.writeFile('artifacts/qa/results.json',JSON.stringify({date:'2026-10-30',browser:browser.version(),results,browserErrors:issues},null,2));
+ await fs.writeFile(artifactDir+'/results.json',JSON.stringify({date:'2026-10-30',browser:browser.version(),results,browserErrors:issues},null,2));
  console.log(`Browser QA passed: ${results.length} checks; zero axe WCAG A/AA violations on every page at 1440/320px, zero script errors. Screenshots: artifacts/qa/.`);
-}finally{await browser.close();await new Promise(r=>server.close(r));}
+}finally{await browser.close();if(server)await new Promise(r=>server.close(r));}
