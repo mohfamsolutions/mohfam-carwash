@@ -1,0 +1,13 @@
+{
+  "host": "p3plmcpnl503624.prod.phx3.secureserver.net",
+  "originalSuppliedHost": "ftp.mohfamsecurity.com",
+  "dedicatedIp": "148.72.28.253",
+  "port": 21,
+  "user": "mohfamcarwash@mohfamcarwash.com",
+  "secure": true,
+  "candidateOrigin": "https://mohfamcarwash.com",
+  "candidateOriginVerified": true,
+  "remoteDirectory": "/",
+  "remoteDirectoryScope": "Dedicated account chroot mapped to the Car Wash HTTPS origin by temporary marker",
+  "serverAbsoluteFilesystemPath": null
+}

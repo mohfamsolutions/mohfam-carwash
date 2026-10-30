@@ -1,0 +1,15 @@
+{
+  "sources": {
+    "hero.jpg": "https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=2200&q=85",
+    "detail.jpg": "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=1400&q=85",
+    "wash.jpg": "https://images.unsplash.com/photo-1607860108855-64acf2078ed9?auto=format&fit=crop&w=1400&q=85",
+    "road.jpg": "https://images.unsplash.com/photo-1493238792000-8113da705763?auto=format&fit=crop&w=1400&q=85",
+    "app-qr.png": "https://mohfamsecurity.com/wp-content/uploads/2026/09/mohfam-app-qr-code.png",
+    "app-store.png": "https://mohfamsecurity.com/wp-content/uploads/2026/09/download-on-the-app-store-badge.png",
+    "app-screen.jpg": "https://mohfamsecurity.com/wp-content/uploads/2026/09/mohfam-app-home-screen-473x1024.jpg"
+  },
+  "qrSHA256": "9ce2fe3736a5a2b074e25c2de98ce6f7185223502dbfe904db910f757aa66214",
+  "qrDestination": "https://apps.apple.com/app/id6793692825",
+  "photoUse": "Illustrative stock, not customer work",
+  "font": "Inter, SIL Open Font License; copied with license from local Pool Cleaning source"
+}

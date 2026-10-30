@@ -1,0 +1,30 @@
+{
+  "name": "mohfam-carwash",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "dev": "node scripts/server.mjs",
+    "start": "node scripts/server.mjs",
+    "test": "node --test tests/*.test.mjs",
+    "verify": "node scripts/verify.mjs",
+    "qa": "node scripts/browser-qa.mjs",
+    "hosting:inspect": "node scripts/inspect-hosting.mjs",
+    "build:production": "node scripts/build.mjs --production",
+    "deploy": "node scripts/deploy.mjs",
+    "verify:live": "node scripts/verify-live.mjs"
+  },
+  "dependencies": {
+    "sharp": "^0.35.5"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.14.0",
+    "@playwright/test": "^1.64.1",
+    "basic-ftp": "^6.2.3",
+    "jsqr": "^1.4.0"
+  }
+}

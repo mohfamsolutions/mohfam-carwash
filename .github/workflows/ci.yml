@@ -1,0 +1,21 @@
+name: Local build and verification
+on: [push, pull_request, workflow_dispatch]
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - run: npm run verify
+      - run: npm test
+      - run: php -l hosting/api/index.php && php -l hosting/404.php
+      - run: node scripts/test-php.mjs
+      - run: npx playwright install --with-deps chromium
+      - run: npm run qa

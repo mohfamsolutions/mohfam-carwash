@@ -1,0 +1,17 @@
+{
+  "uploadsEnabled": true,
+  "publicationAuthorized": true,
+  "publicationAuthorizationDate": "2026-10-30",
+  "domain": "mohfamcarwash.com",
+  "domainIndependentlyVerified": true,
+  "dedicatedAccountVerified": true,
+  "dedicatedHostingFolder": "/",
+  "hostingFolderScope": "Dedicated FTP account root; verified via unique HTTPS/FTPS marker",
+  "serverAbsoluteFilesystemPath": null,
+  "httpsFtpsMarkerVerified": true,
+  "tlsVerified": true,
+  "mailEnabled": false,
+  "senderDomain": null,
+  "mailDnsReviewed": false,
+  "inboxDeliveryVerified": false
+}

@@ -1,0 +1,29 @@
+Options -Indexes
+DirectoryIndex index.html
+ErrorDocument 404 /404.php
+RewriteEngine On
+
+# Rules apply only to the verified Car Wash account directory.
+RewriteCond %{HTTP_HOST} ^(?:www\.)?mohfamsecurity\.com$ [NC]
+RewriteCond %{REQUEST_URI} ^/mohfamcarwash\.com(?:/|$) [NC]
+RewriteRule ^(.*)$ https://mohfamcarwash.com/$1 [R=301,L,NE]
+RewriteCond %{HTTP_HOST} !^mohfamcarwash\.com$ [NC,OR]
+RewriteCond %{HTTPS} !=on
+RewriteRule ^ https://mohfamcarwash.com%{REQUEST_URI} [R=301,L,NE]
+RewriteCond %{THE_REQUEST} \s/+(.*/)?index\.html(?:[?\s]) [NC]
+RewriteRule ^(.*/)?index\.html$ https://mohfamcarwash.com/$1 [R=301,L,NE]
+RewriteRule ^api/(csrf|inquiry)/?$ api/index.php [END]
+RewriteRule ^404/?$ 404.php [END]
+RewriteRule ^404\.html$ 404.php [END]
+
+<IfModule mod_headers.c>
+Header always set X-Content-Type-Options "nosniff"
+Header always set Referrer-Policy "strict-origin-when-cross-origin"
+Header always set X-Frame-Options "DENY"
+Header always set Permissions-Policy "camera=(), microphone=(), geolocation=()"
+Header always set Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'self'; form-action 'self'; base-uri 'none'; frame-ancestors 'none'; object-src 'none'"
+</IfModule>
+
+<FilesMatch "^(?:\.env.*|.*\.log|.*\.bak|composer\.(?:json|lock))$">
+Require all denied
+</FilesMatch>

@@ -1,0 +1,39 @@
+name: Deploy verified Car Wash site
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: carwash-production
+  cancel-in-progress: false
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: carwash-production
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - run: npm run verify
+      - run: npm test
+      - run: php -l hosting/api/index.php && php -l hosting/404.php
+      - run: node scripts/test-php.mjs
+      - run: npm run build:production
+      - run: node scripts/deployment-guard.mjs
+      - name: Verify destination, back up and upload without deletion
+        env:
+          CARWASH_FTPS_PASSWORD: ${{ secrets.CARWASH_FTPS_PASSWORD }}
+        run: npm run deploy
+      - name: Preserve deployment backup
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: carwash-deployment-backup-${{ github.run_id }}
+          path: artifacts/backups/
+          if-no-files-found: ignore
+          retention-days: 30
+      - run: npm run verify:live
