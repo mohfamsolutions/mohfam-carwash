@@ -1,0 +1,13 @@
+import fs from 'node:fs/promises';
+import crypto from 'node:crypto';
+import {execFile} from 'node:child_process';
+import {promisify} from 'node:util';
+const execute=promisify(execFile);
+if(process.platform!=='win32'||!process.argv[2])throw new Error('Usage on the original Windows account: node scripts/decrypt-backup.mjs path/to/backup.enc');
+const {stdout}=await execute('powershell.exe',['-NoProfile','-NonInteractive','-Command',"$ErrorActionPreference='Stop'; $secure=Get-Content -LiteralPath '.local/backup-private-key.dpapi' | ConvertTo-SecureString; [Console]::Out.Write(([System.Net.NetworkCredential]::new('', $secure)).Password)"],{windowsHide:true});
+const envelope=JSON.parse(await fs.readFile(process.argv[2],'utf8'));
+const key=crypto.privateDecrypt({key:stdout,oaepHash:'sha256',padding:crypto.constants.RSA_PKCS1_OAEP_PADDING},Buffer.from(envelope.key,'base64'));
+const cipher=crypto.createDecipheriv('aes-256-gcm',key,Buffer.from(envelope.iv,'base64'));cipher.setAuthTag(Buffer.from(envelope.tag,'base64'));
+const archive=Buffer.concat([cipher.update(Buffer.from(envelope.data,'base64')),cipher.final()]);key.fill(0);
+await fs.mkdir('artifacts/restored',{recursive:true});await fs.writeFile('artifacts/restored/backup.tar.gz',archive);
+console.log('Authenticated backup decrypted to artifacts/restored/backup.tar.gz. No files restored remotely.');

@@ -29,12 +29,15 @@ jobs:
         env:
           CARWASH_FTPS_PASSWORD: ${{ secrets.CARWASH_FTPS_PASSWORD }}
         run: npm run deploy
-      - name: Preserve deployment backup
+      - name: Encrypt deployment backup
+        if: always()
+        run: node scripts/encrypt-backup.mjs
+      - name: Preserve encrypted deployment backup
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: carwash-deployment-backup-${{ github.run_id }}
-          path: artifacts/backups/
+          path: artifacts/backup-encrypted/*.enc
           if-no-files-found: ignore
           retention-days: 30
       - run: npm run verify:live

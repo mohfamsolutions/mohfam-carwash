@@ -1,10 +1,10 @@
-# MohFam Car Wash — local preview
+# MohFam Car Wash
 
-An independent, seven-page website built only in this repository. **Nothing is published. Uploads and real email delivery are disabled.** Other MohFam source projects are unchanged.
+Website: **https://mohfamcarwash.com/**. Publication authorized by the user on October 30, 2026. Changes and deployment apply only to the dedicated Car Wash account. Real inquiry email delivery remains disabled; visitors are directed to the confirmed phone and email.
 
-## Run locally
+## Local preview
 
-Node 22+ (Node 24 recommended):
+Requires Node 22+ (24 recommended).
 
 ```powershell
 npm.cmd ci
@@ -12,21 +12,22 @@ npm.cmd run build
 npm.cmd run dev
 ```
 
-Open **http://127.0.0.1:4177**. `npm.cmd` works with Windows PowerShell’s default execution policy. The server binds only to loopback. Stop with Ctrl+C. It serves the generated `dist/` directory, genuine branded 404 responses, and a secure local inquiry API; a generic static-file server will not support that API.
+Open **http://127.0.0.1:4177**. The local Node server remains loopback-only and noindex. Production is generated separately into ignored `release/` with `npm.cmd run build:production`; local output stays in `dist/`.
 
-## Pages and content
+## Source and identity
 
-Home, About, Services, Vehicles / Customer Inquiries, Contact, Privacy and branded 404. Individual service pages are deliberately deferred because no specific offerings are confirmed. The services page presents three explicitly proposed discussion scopes, with anchors rather than pretending they are established offerings.
+Seven pages: Home, About, Services, Vehicles, Contact, Privacy and branded 404. Specific services and audiences are explicitly proposed or awaiting confirmation. There are no invented locations, prices, credentials, reviews or availability claims. Individual service pages await confirmed scopes.
 
-- `data/site.mjs`: confirmed contact details, proposals, FAQs, shared navigation/footer links, page metadata, search purpose and verified origin.
-- `scripts/build.mjs`: page-specific compositions, local social images, logo raster, schema and sitemap.
-- `public/styles.css` and `public/app.js`: responsive visual system and interactions.
-- `scripts/server.mjs`: local preview, inquiry validation and security controls.
-- `deployment.json` and `.github/workflows/`: CI plus a locked deployment preparation workflow.
+- `data/site.mjs`: contacts, proposed scopes, FAQ/footer/navigation data, page metadata and search purpose.
+- `scripts/build.mjs`: distinct page compositions, local social images, schema and image sitemap.
+- `public/`: responsive styles, accessible interactions and local assets.
+- `hosting/`: dedicated Apache redirects/headers/404 handling and a secure PHP inquiry endpoint.
+- `scripts/deploy.mjs`: destination revalidation, backup and FTPS uploads without remote deletion.
+- `deployment.json`: publication authorization and independently verified destination gates.
 
-The proposal uses charcoal `#181c1d`, warm ivory `#f7f5ef`, muted gold `#c7a263`, and local Inter. An original automotive medallion with fine gold rings and a sculpted car silhouette distinguishes Car Wash from the pool seal and landscaping tree. See [project notes](docs/project.md) for references, facts, asset provenance, verification and remaining dependencies.
+The approved design direction uses charcoal, warm ivory, muted gold and local Inter. The latest requested logo is an original gold automotive medallion, inspired by the fine finish of Pool Cleaning while using a distinct car silhouette, finish glint and no MF letters or pool-wave motif.
 
-## Verification
+## Checks
 
 ```powershell
 npm.cmd run build
@@ -34,14 +35,18 @@ npm.cmd run verify
 npm.cmd test
 npx.cmd playwright install chromium
 npm.cmd run qa
+npm.cmd run build:production
+node scripts/verify-production.mjs
+npm.cmd run verify:live
+node scripts/browser-qa.mjs --live
 ```
 
-`verify` checks all seven routes, 204 internal references, one H1 per page, unique metadata, verified-domain HTTPS canonicals, schema, sitemap, noindex, QR hash/decoding, logo dimensions and every social image. Eight server/security test groups cover validation, origin/CSRF, spam, expiration, size limits, disabled delivery, rate limiting, HTTP responses and deployment locks.
+GitHub CI additionally lints the PHP files and exercises the actual PHP endpoint with origin/CSRF/header/spam/rate/disabled-mail tests. Local/browser checks cover all seven pages at 1440, 1024, 768, 390 and 320px; automated WCAG A/AA scans at 1440/320px; navigation, header behavior, FAQs, reduced motion and preserved form fields after errors. Screenshots and reports are in ignored `artifacts/qa/` and `artifacts/qa-live/`.
 
-Playwright launches actual Chromium. It checks all pages at 1440, 1024, 768, 390 and 320px, performs axe WCAG A/AA scans at 1440/320px, and exercises dropdown/keyboard/Escape, header scrolling, mobile menus, independent FAQs, reduced motion and preserved fields after disabled-delivery/connection errors. Results and screenshots go to ignored `artifacts/qa/`. Automated scans do not substitute for assistive-technology user testing.
+## Deployment and remaining work
 
-## Release boundary
+Manual GitHub workflow: `Deploy verified Car Wash site`, protected by a dedicated `carwash-production` environment with its own encrypted FTPS secret. No deployments occur automatically on pushes. The workflow verifies authorization, TLS, exact account-root mapping with a unique temporary HTTPS/FTPS marker, backs up before overwrite, uploads without deletion and verifies live HTTP behavior. Backups are encrypted before being stored as Actions artifacts; the private restore key is Windows-user encrypted in ignored `.local/`.
 
-The verified origin is `https://mohfamcarwash.com`. Its dedicated FTPS account root was independently mapped using a temporary HTTPS/FTPS marker, which was removed. Pages and HTTP responses are noindex; robots disallows all crawling. Generated sitemap content is for review only. Mail returns HTTP 503 with an explicit **NOT sent** message; it never simulates success. No environment variable can activate local mail.
+Real form delivery remains disabled until an authorized sender domain, SPF/DKIM/DMARC review and actual recipient inbox receipt are verified. The PHP endpoint currently validates and returns a truthful NOT SENT response; browser fields remain intact. No test email has been sent. Search Console ownership and sitemap submission remain separate follow-up tasks; SEO implementation does not guarantee indexing or rankings.
 
-The GitHub Actions deployment workflow currently refuses remote work. It has no upload step or hosting secrets. Its guard is preparation, not a completed production deployment integration. Production runtime integration, a fresh destination check, mail integration and production redirects must be finished against the independently verified environment after explicit deployment authorization. See [release requirements](docs/release.md).
+See [project details and asset sources](docs/project.md) and [deployment and mail operations](docs/release.md).

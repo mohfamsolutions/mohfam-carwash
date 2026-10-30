@@ -41,7 +41,7 @@ There are no invented addresses, reviews, prices, credentials, guarantees, envir
 
 Central distinct titles/descriptions/search purpose, one H1 per page, OG and X large-image metadata with alt/dimensions/MIME, separate logo, factual Organization/WebSite/WebPage/BreadcrumbList schema, route-derived image sitemap and fixed editorial date are implemented. No city-based keywords, ratings, unsupported LocalBusiness attributes or unconfirmed Service schema are emitted. Canonicals and sitemap URLs now use independently verified HTTPS `mohfamcarwash.com`. The initial reserved placeholder was replaced after dedicated-account FTPS/HTTPS marker verification. Local pages use both noindex metadata and HTTP headers; robots disallows crawling.
 
-No production HTTPS/www redirect or alias migration has been enabled. The Car Wash domain is verified, but a complete alias inventory and production configuration are still pending. Local trailing slash and explicit index-file canonical redirects work. Search Console ownership verification and sitemap submission are later, separate tasks. Technical implementation does not establish Google indexing or ranking.
+Publication is authorized. Dedicated-directory production redirects canonicalize HTTP, www, explicit index files and the independently marker-confirmed Security-domain subfolder alias. Local trailing slash and explicit index-file canonical redirects work. Search Console ownership verification and sitemap submission are later, separate tasks. Technical implementation does not establish Google indexing or ranking.
 
 ## Checks performed
 
@@ -56,4 +56,4 @@ No production HTTPS/www redirect or alias migration has been enabled. The Car Wa
 - Representative desktop Home/Contact, narrow Home and branded social preview visually inspected. Screenshots of all pages at 1440 and 390px are retained locally in `artifacts/qa/`.
 - Dependency audit: zero known production dependency vulnerabilities at the time of the check. This is not a security certification.
 
-Manual assistive-technology testing, real mobile devices, production hosting headers/redirects, full alias inventory, mail DNS authentication and actual recipient inbox delivery are not verified.
+Manual assistive-technology testing, real mobile devices, mail DNS authentication and actual recipient inbox delivery are not verified.

@@ -15,6 +15,9 @@ RewriteRule ^(.*/)?index\.html$ https://mohfamcarwash.com/$1 [R=301,L,NE]
 RewriteRule ^api/(csrf|inquiry)/?$ api/index.php [END]
 RewriteRule ^404/?$ 404.php [END]
 RewriteRule ^404\.html$ 404.php [END]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ 404.php [END]
 
 <IfModule mod_headers.c>
 Header always set X-Content-Type-Options "nosniff"
