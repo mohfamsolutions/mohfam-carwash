@@ -45,6 +45,8 @@ try{
  for($i=0;$i<5;$i++)check(consumeRateLimit($temp,'192.0.2.8',$key,$now+$i),'Allowed attempt blocked');
  check(!consumeRateLimit($temp,'192.0.2.8',$key,$now+6),'Sixth attempt accepted');check(!consumeRateLimit($temp,'192.0.2.8',$key,$now+901),'Hourly rate expired early');
  check(consumeRateLimit($temp,'192.0.2.8',$key,$now+3605),'Hourly expiry failed');
+ for($i=0;$i<60;$i++)check(consumeRateLimit($temp,'192.0.2.8',$key,$now+$i,'token'),'Token attempt blocked early');
+ check(!consumeRateLimit($temp,'192.0.2.8',$key,$now+61,'token'),'Token initialization rate bypass');
  check(strpos(file_get_contents($temp.'/mohfam-carwash-inquiry-rate.json'),'192.0.2.')===false,'Raw IP stored');
  file_put_contents($temp.'/mohfam-carwash-inquiry-rate.json','invalid');check(!consumeRateLimit($temp,'192.0.2.8',$key,$now),'Corrupt rate state failed open');
  check(logEvent($temp,$job['reference'],'notification_accepted',201,'<test@example.test>'),'Log write failed');$entry=json_decode(trim(file_get_contents($temp.'/mohfam-carwash-inquiry.log')),true);check(array_keys($entry)===['timestamp','reference','status','http_code','messageId'],'Log contains extra data');
@@ -54,7 +56,7 @@ try{
  ob_start();$loaded=loadKey($temp.'/private');$output=ob_get_clean();check($output===''&&$loaded==='synthetic-private-config-for-testing-only','Config output exposed');
  file_put_contents($temp.'/private/mohfam-mail.php','<?php return [];');$blocked=false;try{loadKey($temp.'/private');}catch(Throwable $e){$blocked=true;}check($blocked,'Missing key accepted');
 }finally{
- foreach(['mohfam-carwash-inquiry-rate.json','mohfam-carwash-inquiry.log','private/mohfam-mail.php']as$file)if(is_file($temp.'/'.$file))unlink($temp.'/'.$file);
+ foreach(['mohfam-carwash-inquiry-rate.json','mohfam-carwash-token-rate.json','mohfam-carwash-inquiry.log','private/mohfam-mail.php']as$file)if(is_file($temp.'/'.$file))unlink($temp.'/'.$file);
  rmdir($temp.'/private');rmdir($temp.'/public_html/mohfamcarwash.com');rmdir($temp.'/public_html');rmdir($temp);
 }
 echo "Car Wash inquiry checks passed: validation, CSRF, origin/referer, timing, rate, payloads, LA date, private config/logging, independent follow-ups. No email sent.\n";

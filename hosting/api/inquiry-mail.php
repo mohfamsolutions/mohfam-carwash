@@ -70,8 +70,9 @@ function accepted(array $result): bool { return ($result['ok'] ?? false) === tru
 function escape(string $value): string { return htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); }
 
 /** Five attempts per connection per hour; state stays outside public_html. */
-function consumeRateLimit(string $private, string $ip, string $key, int $now): bool {
-    $path=$private.'/mohfam-carwash-inquiry-rate.json';
+function consumeRateLimit(string $private, string $ip, string $key, int $now, string $kind='inquiry'): bool {
+    if(!in_array($kind,['inquiry','token'],true))return false;
+    $path=$private.'/mohfam-carwash-'.$kind.'-rate.json';
     if(is_link($path))return false;
     $file=@fopen($path,'c+');if($file===false)return false;
     try{
@@ -82,8 +83,8 @@ function consumeRateLimit(string $private, string $ip, string $key, int $now): b
             $state[$hash]=array_values(array_filter($times,static function($time)use($now):bool{return is_int($time)&&$time>$now-3600;}));
             if(!$state[$hash])unset($state[$hash]);
         }
-        $hash=hash_hmac('sha256','carwash-rate|'.$ip,$key);$times=$state[$hash]??[];
-        if(count($times)>=5||(!isset($state[$hash])&&count($state)>=10000))return false;
+        $hash=hash_hmac('sha256','carwash-'.$kind.'-rate|'.$ip,$key);$times=$state[$hash]??[];
+        if(count($times)>=($kind==='token'?60:5)||(!isset($state[$hash])&&count($state)>=10000))return false;
         $times[]=$now;$state[$hash]=$times;$json=json_encode($state,JSON_THROW_ON_ERROR);rewind($file);
         return ftruncate($file,0)&&fwrite($file,$json)===strlen($json)&&fflush($file);
     }finally{flock($file,LOCK_UN);fclose($file);}

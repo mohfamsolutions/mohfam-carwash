@@ -71,7 +71,9 @@ function handleCarwashInquiry(): void {
     session_set_cookie_params(['lifetime'=>1800,'path'=>'/api','secure'=>true,'httponly'=>true,'samesite'=>'Strict']);session_start();
     if($method==='GET'){
         if(empty($_SESSION['csrf'])||time()-(int)($_SESSION['issued']??0)>1800){session_regenerate_id(true);$_SESSION['csrf']=bin2hex(random_bytes(32));$_SESSION['issued']=time();}
-        $mailReady=false;try{$mailReady=loadKey(privateDirectory(dirname(__DIR__)))!=='';}catch(Throwable $error){}
+        $mailReady=false;$tokenAllowed=true;
+        try{$private=privateDirectory(dirname(__DIR__));$key=loadKey($private);$mailReady=true;$ip=$_SERVER['REMOTE_ADDR']??'';$tokenAllowed=filter_var($ip,FILTER_VALIDATE_IP)&&consumeRateLimit($private,$ip,$key,time(),'token');}catch(Throwable $error){}
+        if(!$tokenAllowed){session_write_close();header('Retry-After: 3600');http_response_code(429);echo json_encode(['ok'=>false,'message'=>'Too many form initializations. Please try again later or contact MohFam directly.']);return;}
         echo json_encode(['token'=>$_SESSION['csrf'],'mailReady'=>$mailReady]);session_write_close();return;
     }
     if((int)($_SERVER['CONTENT_LENGTH']??0)>16384)$result=carwashResult(413,'This inquiry is too large. Please shorten your message.');
