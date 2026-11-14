@@ -15,7 +15,7 @@ jobs:
       - run: npm run build
       - run: npm run verify
       - run: npm test
-      - run: php -l hosting/api/index.php && php -l hosting/404.php
+      - run: php -l hosting/api/index.php && php -l hosting/api/inquiry-mail.php && php -l hosting/404.php
       - run: node scripts/test-php.mjs
       - run: npx playwright install --with-deps chromium
       - run: npm run qa

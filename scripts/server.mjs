@@ -18,11 +18,11 @@ export function validate(data){
  if(data.phone&&!/^[+\d ()\-.]{6,30}$/.test(data.phone))return 'Please check your phone number.';
  if(!categories.has(data.category))return 'Please select an inquiry type.';
  if(data.message.trim().length<10||/[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]/.test(data.message))return 'Please enter a message between 10 and 4,000 characters without control characters.';
- if(data.consent!==true)return 'Please agree to the privacy notice before submitting.';
+ if(data.consent!=='yes')return 'Please agree to the privacy notice before submitting.';
  return null;
 }
 export function composeMail(data){const problem=validate(data);if(problem)throw new Error(problem);return {to:site.email,subject:`[MohFam Car Wash] ${data.category} inquiry`,replyTo:data.email,text:`Name: ${data.name}\nEmail: ${data.email}\nPhone: ${data.phone||'Not provided'}\nCity / ZIP: ${data.location}\nType: ${data.category}\n\n${data.message}`};}
-export function createServer({port=4177,now=Date.now,minFillMs=2500}={}){
+export function createServer({port=4177,now=Date.now,minFillMs=3000}={}){
  const sessions=new Map(),limits=new Map();
  const maxEntries=10000;
  const allowedOrigins=new Set([`http://127.0.0.1:${port}`,`http://localhost:${port}`]);
@@ -65,7 +65,7 @@ export function createServer({port=4177,now=Date.now,minFillMs=2500}={}){
    const problem=validate(data);if(problem)return send(res,422,problem+' Your entries are still here.');
    if(data.website||now()-session.created<minFillMs)return send(res,422,'The inquiry could not be accepted. Please wait a few seconds, check the form and try again. Your entries are still here.');
    // Deliberate hard stop: no environment variable or copied credential can activate mail in this preview.
-   return send(res,503,'Email delivery is disabled in this local preview. Your inquiry has NOT been sent. Your entries are still here. Please call +1 (818) 818-1181 or email mohfamsolutions@gmail.com.');
+   return send(res,503,'Local previews do not send inquiries or create Brevo contacts. Your entries are still here. Please call +1 (818) 818-1181 or email mohfamsolutions@gmail.com.');
   }
   if(!['GET','HEAD'].includes(req.method)){res.setHeader('Allow','GET, HEAD');return send(res,405,'Method not allowed.');}
   if(pathname.includes('\0')||pathname.includes('\\'))return send(res,400,'Invalid path.');

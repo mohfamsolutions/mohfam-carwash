@@ -1,6 +1,6 @@
 # MohFam Car Wash
 
-Website: **https://mohfamcarwash.com/**. Publication authorized by the user on October 30, 2026. Changes and deployment apply only to the dedicated Car Wash account. Real inquiry email delivery remains disabled; visitors are directed to the confirmed phone and email.
+Website: **https://mohfamcarwash.com/**. Publication authorized by the user on October 30, 2026. Changes and deployment apply only to the dedicated Car Wash account. The inquiry flow uses Brevo for team notifications, visitor confirmations and contact follow-up. The owner-run live acceptance test is pending.
 
 ## Local preview
 
@@ -47,6 +47,6 @@ GitHub CI additionally lints the PHP files and exercises the actual PHP endpoint
 
 Manual GitHub workflow: `Deploy verified Car Wash site`, protected by a dedicated `carwash-production` environment with its own encrypted FTPS secret. No deployments occur automatically on pushes. The workflow verifies authorization, TLS, exact account-root mapping with a unique temporary HTTPS/FTPS marker, backs up before overwrite, uploads without deletion and verifies live HTTP behavior. Backups are encrypted before being stored as Actions artifacts; the private restore key is Windows-user encrypted in ignored `.local/`.
 
-Real form delivery remains disabled until an authorized sender domain, SPF/DKIM/DMARC review and actual recipient inbox receipt are verified. The PHP endpoint currently validates and returns a truthful NOT SENT response; browser fields remain intact. No test email has been sent. Search Console ownership and sitemap submission remain separate follow-up tasks; SEO implementation does not guarantee indexing or rankings.
+The server reads the existing shared private Brevo configuration outside public_html. Notification success requires HTTP 201 plus a valid messageId. Confirmation and list-15 contact upsert run after litespeed_finish_request; failures are privately logged and never expose API credentials or bodies. Consent is permission to respond only, never marketing opt-in. All automated provider calls are mocked, and browser POSTs are intercepted even in live QA. Phase 3 is one owner-submitted live test after explicit approval. Search Console ownership and sitemap submission remain separate follow-up tasks; SEO implementation does not guarantee indexing or rankings.
 
 See [project details and asset sources](docs/project.md) and [deployment and mail operations](docs/release.md).

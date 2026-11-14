@@ -10,8 +10,11 @@
   "serverAbsoluteFilesystemPath": null,
   "httpsFtpsMarkerVerified": true,
   "tlsVerified": true,
-  "mailEnabled": false,
-  "senderDomain": null,
+  "mailEnabled": true,
+  "senderDomain": "mohfam.co",
   "mailDnsReviewed": false,
-  "inboxDeliveryVerified": false
+  "inboxDeliveryVerified": false,
+  "mailProvider": "Brevo",
+  "contactListId": 15,
+  "liveTestPending": true
 }

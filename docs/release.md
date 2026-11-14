@@ -54,3 +54,17 @@ Before activating mail, confirm an authorized sender identity/domain; inspect it
 Actual offerings, service areas, operating model, vehicle eligibility, hours, pricing, availability and water/power requirements still need business confirmation. Proposals remain clearly labeled on the public site. Car Wash booking in the shared app is not claimed.
 
 Search Console ownership verification and sitemap submission remain separate from deployment and technical SEO; indexing and rankings are not guaranteed.
+
+## Brevo migration - November 15, 2026
+
+Phase 2 approved by the owner. A token-protected temporary readiness probe returned only booleans: shared config readable, key present, HTTPS cURL available, litespeed_finish_request available, private directory writable and private target files safe. The probe was deleted and its URL returned 404. No key was printed or copied into the repository. No DNS or other website was changed.
+
+The new handler uses the existing account-home/private/mohfam-mail.php configuration. It sends notifications from website@mohfam.co to mohfamsolutions@gmail.com, with validated visitor Reply-To. HTTP 201 and a valid messageId are mandatory for success. All fields, page URL, reference, UTC and Los Angeles timestamps appear in the notification.
+
+After response completion, the visitor receives the approved Car Wash confirmation with the PNG logo, followed by a list-15 contact upsert with updateEnabled=true. Only FIRSTNAME, LASTNAME, SERVICE_INTEREST, SOURCE_SITE and LAST_INQUIRY_AT are sent as attributes. No marketing permission or list removals are sent. Confirmation excludes visitor message, phone and location.
+
+Consent must be the literal yes. Pool's Origin/Referer checks, UTF-8/C1 handling and a three-second minimum are applied. CSRF expires after 30 minutes. Keyed IP rate hashes and sanitized operational logs use separate Car Wash files in the private folder outside public_html; no production rate file uses sys_get_temp_dir.
+
+The dedicated FTPS deployment account is retained. Only .local/authorized-mail-test.mjs was deleted. artifacts/mail JSON files remain ignored local history and are excluded from release uploads. The old public 503 NOT SENT block and native mail() transport are absent. Local previews still never contact Brevo.
+
+The earlier disabled-delivery and native-mail notes above are historical. Current mailEnabled is true for the Brevo implementation; inboxDeliveryVerified remains false and liveTestPending true until Phase 3. No automated live submission is authorized: all automated PHP provider calls use injectable/stub transports, and browser form POSTs are intercepted. Ask the owner before the ONE live test; the owner submits their own email.
