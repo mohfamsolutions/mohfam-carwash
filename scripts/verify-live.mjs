@@ -1,14 +1,18 @@
 import fs from 'node:fs/promises';
 import assert from 'node:assert/strict';
+import {createHash} from 'node:crypto';
 import {pages,site} from '../data/site.mjs';
-const checks=[];
+const checks=[],scripts=new Set();
 for(const page of pages){if(page.key==='404')continue;
  const r=await fetch(site.origin+page.path,{redirect:'error'});assert.equal(r.status,200,page.path);const html=await r.text();
  assert(html.includes(`rel="canonical" href="${site.origin+page.path}"`));assert(html.includes('content="index,follow"'));assert(!html.includes('LOCAL PREVIEW'));assert(!r.headers.get('x-robots-tag')?.includes('noindex'));
  assert(r.headers.get('content-security-policy'));
+ assert(r.headers.get('cache-control')?.includes('no-cache'));assert(r.headers.get('cache-control')?.includes('must-revalidate'));
+ const script=html.match(/<script type="module" src="(\/app\.js\?v=[a-f0-9]{12})"/);assert(script,page.path+' versioned script');scripts.add(script[1]);
  const schema=JSON.parse(html.match(/<script type="application\/ld\+json">(.*?)<\/script>/)[1]);assert.equal(schema['@graph'].length,4);
  checks.push(page.path+' metadata, schema, indexability and security headers');
 }
+assert.equal(scripts.size,1);const scriptUrl=[...scripts][0],scriptResponse=await fetch(site.origin+scriptUrl);assert.equal(scriptResponse.status,200);const scriptBytes=Buffer.from(await scriptResponse.arrayBuffer());assert.equal(scriptUrl.split('=')[1],createHash('sha256').update(scriptBytes).digest('hex').slice(0,12));
 for(const path of ['/assets/logo.svg','/assets/organization-logo.png','/assets/app-qr.png','/assets/inter.woff2','/assets/hero.jpg','/styles.css','/app.js',...pages.map(p=>`/assets/social/${p.key}.jpg`)])assert.equal((await fetch(site.origin+path)).status,200,path);
 for(const url of ['http://mohfamcarwash.com/','https://www.mohfamcarwash.com/','http://www.mohfamcarwash.com/','https://mohfamcarwash.com/index.html','https://mohfamcarwash.com/about/index.html','https://mohfamsecurity.com/mohfamcarwash.com/','https://mohfamsecurity.com/mohfamcarwash.com/about/']){const r=await fetch(url,{redirect:'manual'});assert([301,308].includes(r.status),url+' redirect');assert(r.headers.get('location')?.startsWith(site.origin));checks.push(url+' canonical redirect');}
 for(const route of ['/not-a-real-carwash-page/','/404.html','/404/']){const r=await fetch(site.origin+route);assert.equal(r.status,404,route);assert((await r.text()).includes('A small detour.'));checks.push(route+' genuine branded 404');}
