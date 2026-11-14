@@ -17,3 +17,5 @@ Publication authorized: production build, dedicated Apache/PHP support, canonica
 Publication complete: https://mohfamcarwash.com/. Deployment run 40990714623 and matching CI run 40990713433 passed. Live HTTP/metadata/assets/redirect/404/API checks passed; 38 live browser checks passed with zero automated WCAG A/AA findings at desktop/320px. Encrypted backup downloaded and authenticated/decrypted locally. Remaining business, mail and Search Console work is documented in docs/release.md.
 
 Brevo Phase 2: readiness passed and probe deleted/404; migrate only Car Wash using the read-only Pool reference. Keep deploy FTPS account, delete legacy local launcher, retain ignored history. Implement strict Brevo acceptance, after-response confirmation/list-15 sync, consent=yes, private rate/log state, updated privacy and mocked tests. Phase 3 requires approval before the owner submits one live test.
+
+Brevo Phase 2 complete: deployment/tests and 38 intercepted live browser checks passed. No live submission sent. Await approval before Phase 3; owner submits ONE inquiry using their own email.
